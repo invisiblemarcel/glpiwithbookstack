@@ -1,0 +1,57 @@
+<root>
+   <name>GLPI with Bookstack</name>
+   <key>glpiwithbookstack</key>
+   <!-- stable, beta, development, alpha, ... -->
+   <state>stable</state>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/glpiwithbookstack/master/{LNAME}.png</logo>
+   <description>
+      <short>
+         <!-- Add as many lang tag you want -->
+         <en>GLPI with Bookstack GLPI plugin.</en>
+         <de>GLPI mit Bookstack</de>
+      </short>
+      <long>
+         <!-- Add as many lang tag you want -->
+         <en>GLPI with Bookstack integrates Bookstack into GLPI as an alternative knowledge base.</en>
+         <de>GLPI with Bookstack integriert Bookstack in GLPI als eine alternative Wissensdatenbank.</de>
+      </long>
+   </description>
+   <homepage>https://github.com/invisiblemarcel</homepage>
+   <download>https://github.com/invisiblemarcel/releases</download>
+   <issues>https://github.com/invisiblemarcel/issues</issues>
+   <readme>https://github.com/invisiblemarcel/blob/master/README.md</readme>
+   <authors>
+      <!-- Add as many author tag you want -->
+      <author>invisiblemarcel</author>
+   </authors>
+   <versions>
+      <!-- Add as many version tag you want -->
+      <version>
+         <num>0.1.0</num>
+         <!-- Add as many compatibility tag you want -->
+         <compatibility>9.4</compatibility>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.2</compatibility>
+      </version>
+   </versions>
+   <langs>
+      <!-- Add as many lang tag you want -->
+      <lang>en_GB</lang>
+      <lang>de_DE</lang>
+   </langs>
+   <license>GPL V3+</license>
+   <!--tags>
+      <en>
+         <tag>One tag</tag>
+         <tag>Another tag</tag>
+      </en>
+      <fr>
+         <tag>Un tag</tag>
+         <tag>Un autre tag</tag>
+      </fr>
+   </tags-->
+   <!--screenshots>
+      <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot.png</screenshot>
+      <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot2.png</screenshot>
+   </screenshots-->
+</root>
