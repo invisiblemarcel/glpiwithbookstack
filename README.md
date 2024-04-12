@@ -4,16 +4,17 @@ Bookstack is a lovely tool for knowledge management.
 It presents the data like a library.
 I prefer Bookstack over the build in GLPI knowledge base so I try to integrate Bookstack's API into GLPI frontend.
 
-For now this plugin needs to be edited before it can be used.
-You need to edit the file inc/integrate.class.php and set your Bookstack URL in the variable $bookstack_url.
-Also you need to generate an API token for your user which need to be set in the variable $bookstack_token (id and secret).
+Integration overview:
+- Whenever your users create or edit a ticket they get the search results from your own Bookstack instance. You do not need to add any tags or links in GLPI or Bookstack. It will just use the full text search of Bookstack. You just need to set your categories wisely so they allow a precise search on Bookstack.
+- New ticket form (self service frontend only): added Bookstack search results for the current selected category and it's subcategories: ![New ticket](./screenshots/03_new_ticket.png)
+- Existing ticket form  (frontend and backend): added tab a new tab with customizable name. If you click on it the Bookstack results for the tickets category and it's subcategories will be displayed: ![Display ticket](./screenshots/04_display_ticket.png) ![Display ticket Bookstack](./screenshots/05_display_ticket_bookstack.png)
 
-After that you can install and enable the plugin.
-
-The plugin adds a new tab to the ticket view form named _Knowledge base_.
-The content of the tab is rendered in php and access your Bookstack through it's API and use the Bookstack search to lookup for the words in the ticket title.
-All the results (pages) are printed with title and preview in a table with clickable title so you can jump directly to the Bookstack page.
-There is also a Link at the top to jump to the search in Bookstack directly.
+When you install and enable the plugin a config symbol will be displayed next to the plugin entry in the settings:
+![Open settings](./screenshots/01_open_settings.png)
+Before you can use the Bookstack integration you need to set the url, api id and api secret.
+The id and secret can be generated in the user settings in Bookstack.
+There are a few settings you can set to customize your integration. Feel free to change them:
+![Settings](./screenshots/02_settings.png)
 
 ## Contributing
 

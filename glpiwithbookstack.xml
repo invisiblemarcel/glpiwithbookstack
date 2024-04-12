@@ -7,7 +7,7 @@
    <description>
       <short>
          <!-- Add as many lang tag you want -->
-         <en>GLPI with Bookstack GLPI plugin.</en>
+         <en>GLPI with Bookstack.</en>
          <de>GLPI mit Bookstack</de>
       </short>
       <long>
@@ -17,9 +17,9 @@
       </long>
    </description>
    <homepage>https://github.com/invisiblemarcel</homepage>
-   <download>https://github.com/invisiblemarcel/releases</download>
-   <issues>https://github.com/invisiblemarcel/issues</issues>
-   <readme>https://github.com/invisiblemarcel/blob/master/README.md</readme>
+   <download>https://github.com/invisiblemarcel/glpiwithbookstack/releases</download>
+   <issues>https://github.com/invisiblemarcel/glpiwithbookstack/issues</issues>
+   <readme>https://github.com/invisiblemarcel/glpiwithbookstack/blob/master/README.md</readme>
    <authors>
       <!-- Add as many author tag you want -->
       <author>invisiblemarcel</author>

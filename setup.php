@@ -29,7 +29,12 @@
  * --------------------------------------------------------------------------
  */
 
-define('PLUGIN_GLPIWITHBOOKSTACK_VERSION', '0.1.0');
+use Config as GlpiConfig;
+use Glpi\Plugin\Hooks;
+use GlpiPlugin\Glpiwithbookstack\TicketForm;
+use GlpiPlugin\Glpiwithbookstack\TicketIntegration;
+
+define('PLUGIN_GLPIWITHBOOKSTACK_VERSION', '1.0.0');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_GLPIWITHBOOKSTACK_MIN_GLPI_VERSION", "10.0.0");
@@ -42,11 +47,27 @@ define("PLUGIN_GLPIWITHBOOKSTACK_MIN_GLPI_VERSION", "10.0.0");
  */
 function plugin_init_glpiwithbookstack()
 {
-    global $PLUGIN_HOOKS;
-
+    global $PLUGIN_HOOKS,$CFG_GLPI;
     $PLUGIN_HOOKS['csrf_compliant']['glpiwithbookstack'] = true;
-
-    Plugin::registerClass('PluginGlpiwithbookstackIntegrate', array('addtabon' => array('Ticket')));
+    /*
+     * Display the tools icon for config page in table Plugins
+    */
+    if (Session::haveRight('config', UPDATE)) {
+        $PLUGIN_HOOKS['config_page']['glpiwithbookstack'] = 'front/config.php';
+    }
+    // Add Bookstack integration into menu but only if the settings are set
+    // load plugin configuration
+    $my_config = GlpiConfig::getConfigurationValues('plugin:Glpiwithbookstack');
+    if ($my_config['bookstack_url'] != '' AND $my_config['bookstack_token_id'] != '' AND $my_config['bookstack_token_secret'] != '')
+    {
+        // Add tab for Bookstack in each ticket form
+        Plugin::registerClass('PluginGlpiwithbookstackIntegrate', array('addtabon' => array('Ticket')));
+        // Add Bookstack search result in ticket new form
+        $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['glpiwithbookstack'] = ['PluginGlpiwithbookstackIntegrate', 'postTicketForm'];
+    }
+    // TODO: create page for integrated Bookstack search
+    // Add a link at top level menu for Bookstack
+    //$PLUGIN_HOOKS['redefine_menus']['glpiwithbookstack'] = 'plugin_myplugin_redefine_menus';
 }
 
 
@@ -63,7 +84,7 @@ function plugin_version_glpiwithbookstack()
         'version'        => PLUGIN_GLPIWITHBOOKSTACK_VERSION,
         'author'         => '<a href="https://github.com/invisiblemarcel">invisiblemarcel\'</a>',
         'license'        => '',
-        'homepage'       => 'https://github.com/invisiblemarcel',
+        'homepage'       => 'https://github.com/invisiblemarcel/glpiwithbookstack',
         'requirements'   => [
             'glpi' => [
                 'min' => PLUGIN_GLPIWITHBOOKSTACK_MIN_GLPI_VERSION,

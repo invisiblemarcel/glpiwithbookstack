@@ -36,6 +36,20 @@
  */
 function plugin_glpiwithbookstack_install()
 {
+    $config = new Config();
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_url' => '']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_id' => '']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_secret' => '']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['search_category_name_only' => false]);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_max_search_results' => 10]);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_tab_name' => 'Knowledge base']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_book_page' => 'Book page']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_content_preview' => 'Content preview']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_search_on_bookstack' => 'Search [search_term] on Bookstack']);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_max_results_reached' => '[result_count] of [max_results] results are displayed. Click here to view all: [url]']);
+
+    //ProfileRight::addProfileRights(['glpiwithbookstack:read']);
+
     return true;
 }
 
@@ -46,5 +60,43 @@ function plugin_glpiwithbookstack_install()
  */
 function plugin_glpiwithbookstack_uninstall()
 {
+    $config = new Config();
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_url']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_id']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_secret']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['search_category_name_only']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_max_search_results']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_tab_name']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_book_page']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_content_preview']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_search_on_bookstack']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_max_results_reached']);
+
+    //ProfileRight::deleteProfileRights(['glpiwithbookstack:read']);
     return true;
 }
+/*
+ * TODO: no integrated search yet, so need to create a page for it
+ * Add new menu for Bookstack integrated search on top level
+*/
+function plugin_myplugin_redefine_menus($menu) {
+    if (empty($menu)) {
+        return $menu;
+    }
+    /*
+     * Create custom menu for the new Bookstack knowledge base.
+     * It will be placed on the top menu so it can be reached directly.
+     * A new search form will be display to show the API search
+    */
+    if (array_key_exists('knowledgebase', $menu) === false && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
+        $menu['knowledgebase'] = [
+        //'default'   => '/plugins/myplugin/front/model.php',
+        'default'   => '/front/knowbaseitem.php',
+        'title'     => __('Knowledge base', 'knowledgebase'),
+        'icon'      => 'ti ti-lifebuoy',
+        'content'   => [true]
+    ];
+    }
+    return $menu;
+}
+
