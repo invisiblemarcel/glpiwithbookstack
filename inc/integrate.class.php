@@ -10,15 +10,18 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
     */
     function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
     {
+		// call function for search results and display number of results in tab
+		$config = new self();
+		$table_with_results = $config->getBookstackSearchResults($item->fields['itilcategories_id']);
 		$my_config = GlpiConfig::getConfigurationValues('plugin:Glpiwithbookstack');
-        return self::createTabEntry($my_config['display_text_tab_name']);
+        return self::createTabEntry($my_config['display_text_tab_name'], $table_with_results['total']);
     }
     /**
 	 * @param string $category String with the category and its subcategories, depending on the config they could be cut
 	 *
 	 * @return void
 	*/
-	function echoBookstackSearchResults($categoryid)
+	function getBookstackSearchResults($categoryid)
 	{
 		// load plugin configuration
 		$my_config = GlpiConfig::getConfigurationValues('plugin:Glpiwithbookstack');
@@ -65,12 +68,30 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 			$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['completename'])));
 		}
 		/*
+		 * If the option search_in_tags_only is true in the configuration
+		 * then set the whole search into brackets so it is a tag for Bookstack
+		*/
+		if ($my_config['search_in_tags_only'])
+		{
+			$search = '['.$search.']';
+		}
+		/*
 		 * Create 2 urls url_api and url_front and a href element for url display
 		 * url_api	 = url for api call
 		 * url_front = url for the displayed link in frontend
+		 * If the option search_type_pages_only is thue in the configuration
+		 * then add the type page to the search so Bookstack looks for pages only
 		*/
-		$url_api	 = $bookstack_url.'/api/search?count='.($my_config['display_max_search_results']).'&query='.$search.'+{type:page}';
-		$url_front	 = $bookstack_url.'/search?term='.$search.'+{type:page}';
+		if ($my_config['search_type_pages_only'])
+		{
+			$url_api	 = $bookstack_url.'/api/search?count='.($my_config['display_max_search_results']).'&query='.$search.'+{type:page}';
+			$url_front	 = $bookstack_url.'/search?term='.$search.'+{type:page}';
+		}
+		else
+		{
+			$url_api	 = $bookstack_url.'/api/search?count='.($my_config['display_max_search_results']).'&query='.$search;
+			$url_front	 = $bookstack_url.'/search?term='.$search;
+		}
 		$search_term = str_replace('[search_term]', '"'.$search.'"', $my_config['display_text_search_on_bookstack']);
 		$search_term = str_replace('+', ' ', $search_term);
 		$url_display = '<a target="_blanc" href="'.$url_front.'">'.$search_term.'</a>';
@@ -80,28 +101,40 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		*/
 		$ch = curl_init($url_api);
 		curl_setopt($ch, CURLOPT_HTTPGET, true);
+		// set timeout for curl to prevent long time loading if Bookstack instance is not reachable
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $my_config['curl_timeout']);
 		// do not print the return
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.($bookstack_token[0]).':'.($bookstack_token[1])]);
 		$response_json = curl_exec($ch);
 		curl_close($ch);
+		// check if curl failed then return and do not return the data table
+		if ($response_json === false)
+		{
+			return true;
+		}
 		$response=json_decode($response_json, true);
 		/*
 		 * Display the Bookstack search results in a table
+		 * first check if there are results, if not return and do not return the data table
 		*/
-		echo '<table cellpadding="10px">';
-		echo '<tr>';
-		echo '<td style="min-width: 200px;"><h1>'.($my_config['display_text_book_page']).'</h1></td>';
-		echo '<td><h1>'.($my_config['display_text_content_preview']).'</h1></td>';
-		echo '<td><h1 style="color: blue; text-decoration: underline; text-align: right;">'.$url_display.'</h1></td>';
-		echo '</tr>';
+		if ($response['total'] === 0)
+			return true;
+
+		$this->table_with_results['total'] = $response['total'];
+		$this->table_with_results['table'] =  '<table cellpadding="10px">';
+		$this->table_with_results['table'] .= '<tr>';
+		$this->table_with_results['table'] .= '<td style="min-width: 200px;"><h1>'.($my_config['display_text_title']).'</h1></td>';
+		$this->table_with_results['table'] .= '<td><h1>'.($my_config['display_text_content_preview']).'</h1></td>';
+		$this->table_with_results['table'] .= '<td><h1 style="color: blue; text-decoration: underline; text-align: right;">'.$url_display.'</h1></td>';
+		$this->table_with_results['table'] .= '</tr>';
 		// counter for counting the results
 		$counter = 0;
 		foreach($response['data'] as $book) {
-			echo '<tr style="border-top: 1px solid black;">';
-			echo '<td><b><a target="_blanc" href="'.$bookstack_url.'/link/'.($book['id']).'">'.($book['name']).'</a></b></td>';
-			echo '<td colspan="2">'.($book['preview_html']['content']).'</td>';
-			echo '</tr>';
+			$this->table_with_results['table'] .= '<tr style="border-top: 1px solid black;">';
+			$this->table_with_results['table'] .= '<td><b><a target="_blanc" href="'.$bookstack_url.'/link/'.($book['id']).'">'.($book['name']).'</a></b></td>';
+			$this->table_with_results['table'] .= '<td colspan="2">'.($book['preview_html']['content']).'</td>';
+			$this->table_with_results['table'] .= '</tr>';
 			$counter++;
 		}
 		// if not all results are displayed then show how many displayed and how many missing
@@ -110,10 +143,10 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 			$display_max_results_text = str_replace('[result_count]', $counter, $my_config['display_text_max_results_reached']);
 			$display_max_results_text = str_replace('[max_results]', $response['total'], $display_max_results_text);
 			$display_max_results_text = str_replace('[url]', '<b>'.$url_display.'</b>', $display_max_results_text);
-			echo '<tr style="border-top: 1px solid black;"><td colspan="3">'.$display_max_results_text.'</td></tr>';
+			$this->table_with_results['table'] .= '<tr style="border-top: 1px solid black;"><td colspan="3">'.$display_max_results_text.'</td></tr>';
 		}
-		echo '</table>';
-		return true;
+		$this->table_with_results['table'] .= '</table>';
+		return $this->table_with_results;
 	}
     /**
      * This function is called from GLPI to render the form when the user click
@@ -121,9 +154,10 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
     */
     static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
     {
-		// call function for search result display
+		// call function for search result and display
 		$config = new self();
-		$config->echoBookstackSearchResults($item->fields['itilcategories_id']);
+		$table_with_results = $config->getBookstackSearchResults($item->fields['itilcategories_id']);
+		echo $table_with_results['table'];
         return true;
     }
 	/**
@@ -137,10 +171,12 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		$item = $params['item'];
 		$options = $params['options'];
 		// Check if option-id is not set and categoy is set, that means new ticket and category selected
-		if (!isset($options['id']) && $options['itilcategories_id'] !== 0) {
-			// call function for search result display
+		if (!isset($options['id']) && $item instanceof Ticket && $options['itilcategories_id'] !== 0)
+		{
+			// call function for search result and display
 			$config = new self();
-			$config->echoBookstackSearchResults($options['itilcategories_id']);
+			$table_with_results = $config->getBookstackSearchResults($options['itilcategories_id']);
+			echo $table_with_results['table'];
 			return true;
 		}
 	}

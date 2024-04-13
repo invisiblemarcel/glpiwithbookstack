@@ -73,6 +73,16 @@ echo "<td >" . __('Bookstack token secret:') . "</td>";
 echo "<td>";
 echo "<input size='32' name='bookstack_token_secret' value='".($my_config['bookstack_token_secret'])."'>";
 echo "</td></tr>";
+// yes or no dropdown for setting search_in_tags_only
+echo "<td >" . __('Search in tags only:') . "</td>";
+echo "<td>";
+Dropdown::showYesNo("search_in_tags_only", $my_config['search_in_tags_only']);
+echo "</td></tr>";
+// yes or no dropdown for setting search_type_pages_only
+echo "<td >" . __('Search type pages only:') . "</td>";
+echo "<td>";
+Dropdown::showYesNo("search_type_pages_only", $my_config['search_type_pages_only']);
+echo "</td></tr>";
 // text field for display_max_search_results
 echo "<td >" . __('Display max search results:') . "</td>";
 echo "<td>";
@@ -89,6 +99,11 @@ echo "<td>";
 Dropdown::showYesNo("search_category_completename_but_only_visible", $my_config['search_category_completename_but_only_visible']);
 echo "</td></tr>";
 echo "<tr><td colspan='2'>If 'Seach category name only' is true then this value is disabled.</td></tr>";
+// text field for curl_timeout
+echo "<td >" . __('Curl timeout (in seconds):') . "</td>";
+echo "<td>";
+echo "<input size='2' name='curl_timeout' value='".($my_config['curl_timeout'])."'>";
+echo "</td></tr>";
 /*
  * Optional: change the display texts for the labels
 */
@@ -98,10 +113,10 @@ echo "<td >" . __('Display text tab name:') . "</td>";
 echo "<td>";
 echo "<input size='32' name='display_text_tab_name' value='".($my_config['display_text_tab_name'])."' placeholder='Knowledge base'>";
 echo "</td></tr>";
-// text field for display_text_book_page
-echo "<td >" . __('Display text book page:') . "</td>";
+// text field for display_text_title
+echo "<td >" . __('Display text title:') . "</td>";
 echo "<td>";
-echo "<input size='32' name='display_text_book_page' value='".($my_config['display_text_book_page'])."' placeholder='Book page'>";
+echo "<input size='32' name='display_text_title' value='".($my_config['display_text_title'])."' placeholder='Title'>";
 echo "</td></tr>";
 // text field for display_text_content_preview
 echo "<td >" . __('Display text content preview:') . "</td>";
