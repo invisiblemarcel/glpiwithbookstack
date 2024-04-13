@@ -41,6 +41,7 @@ function plugin_glpiwithbookstack_install()
     $config->setConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_id' => '']);
     $config->setConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_secret' => '']);
     $config->setConfigurationValues('plugin:Glpiwithbookstack', ['search_category_name_only' => false]);
+    $config->setConfigurationValues('plugin:Glpiwithbookstack', ['search_category_completename_but_only_visible' => true]);
     $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_max_search_results' => 10]);
     $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_tab_name' => 'Knowledge base']);
     $config->setConfigurationValues('plugin:Glpiwithbookstack', ['display_text_book_page' => 'Book page']);
@@ -65,6 +66,7 @@ function plugin_glpiwithbookstack_uninstall()
     $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_id']);
     $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['bookstack_token_secret']);
     $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['search_category_name_only']);
+    $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['search_category_completename_but_only_visible']);
     $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_max_search_results']);
     $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_tab_name']);
     $config->deleteConfigurationValues('plugin:Glpiwithbookstack', ['display_text_book_page']);

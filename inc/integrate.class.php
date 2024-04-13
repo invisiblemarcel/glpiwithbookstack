@@ -32,24 +32,38 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		}
 		// Get GLPI database connection
 		global $DB;
-		// get the details of the category by id, we need the name of the category for the search
-		$result = $DB->request([
-			'SELECT' => '*',
-			'FROM'   => 'glpi_itilcategories',
-			'WHERE'  => ['id' =>  ($categoryid)]
-		]);
-		// only 1 should be returned so just get the current (and only) row
-		$row = $result->current();
 		/* build the search term
 		 * if setting search_category_name_only is true then cut top level categories and use category name only
 		 * if setting search_category_name_only is false then use the whole path like category > subcategory > subsubcategory
 		*/
+		$search = '';
 		if ($my_config['search_category_name_only'])
 		{
+			$result = $DB->request('SELECT name FROM glpi_itilcategories WHERE id = '.$categoryid);
+			// only 1 should be returned so just get the current (and only) row
+			$row = $result->current();
 			$search = str_replace(' ', '+', $row['name']);
 		}
+		else if ($my_config['search_category_completename_but_only_visible'])
+		{
+			$query = 'WITH RECURSIVE getParent AS (';
+			$query .= ' SELECT 1 AS row_num, id AS child_id, name AS child_name, itilcategories_id AS child_itilcategories_id, is_helpdeskvisible as child_is_helpdeskvisible FROM glpi_itilcategories WHERE id = ';
+			$query .= $categoryid;
+			$query .= ' UNION ALL';
+			$query .= ' SELECT row_num+1, id, name, itilcategories_id, is_helpdeskvisible FROM getParent, glpi_itilcategories WHERE id = child_itilcategories_id AND child_itilcategories_id <> 0)';
+			$query .= ' SELECT GROUP_CONCAT(child_name ORDER BY row_num DESC SEPARATOR \'+\') AS part_name FROM getParent WHERE child_is_helpdeskvisible = 1;';
+			$result = $DB->request($query);
+			// only 1 should be returned so just get the current (and only) row
+			$row = $result->current();
+			$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['part_name'])));
+		}
 		else
+		{
+			$result = $DB->request('SELECT completename FROM glpi_itilcategories WHERE id = '.$categoryid);
+			// only 1 should be returned so just get the current (and only) row
+			$row = $result->current();
 			$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['completename'])));
+		}
 		/*
 		 * Create 2 urls url_api and url_front and a href element for url display
 		 * url_api	 = url for api call

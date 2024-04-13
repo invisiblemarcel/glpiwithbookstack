@@ -3,20 +3,20 @@
    <key>glpiwithbookstack</key>
    <!-- stable, beta, development, alpha, ... -->
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/glpiwithbookstack/master/{LNAME}.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/glpiwithbookstack/master/bookstack_logo.png</logo>
    <description>
       <short>
          <!-- Add as many lang tag you want -->
-         <en>GLPI with Bookstack.</en>
-         <de>GLPI mit Bookstack</de>
+         <en>This Plugin integrates Bookstack into GLPI as a second knowledge base.</en>
+         <de>Dieses Plugin integriert Bookstack in GLPI als zusätzliche Wissensdatenbank.</de>
       </short>
       <long>
          <!-- Add as many lang tag you want -->
-         <en>GLPI with Bookstack integrates Bookstack into GLPI as an alternative knowledge base.</en>
-         <de>GLPI with Bookstack integriert Bookstack in GLPI als eine alternative Wissensdatenbank.</de>
+         <en>Whenever your users create or edit a ticket they get the search results from your own Bookstack instance. You do not need to add any tags or links in GLPI or Bookstack. It will just use the full text search of Bookstack. You just need to set your categories wisely so they allow a precise search on Bookstack.<br />New ticket form (self service frontend only): added Bookstack search results for the current selected category and it's subcategories.<br />Existing ticket form (frontend and backend): added tab a new tab with customizable name. If you click on it the Bookstack results for the tickets category and it's subcategories will be displayed.</en>
+         <de>Wenn ein Benutzer ein neues Ticket erstellt oder ein bestehendes ansieht/bearbeitet, werden die Suchergebnisse der eigenen Bookstack Instanz angezeigt. Dafür müssen weder Tags noch Links in GLPI oder Bookstack gesetzt werden. Es wird die Volltextsuche von Bookstack verwendet. Hierfür wird die Kategorie (wenn gewünscht, inklusive der übergeordneten Kategorien) des Tickets genutzt.<br />Formular neues Ticket (Self-Service Frontend): wird eine Kategorie ausgewählt, ruft GLPI die API from Bookstack auf und liefert die Sucherergebnisse direkt unter den Eingabefeldern aus. Dabei wird die gewählte Kategorie als Suchbegriff verwendet, wenn gewünscht inklusive der übergeordneten Kategorien.<br />Formular zur Anzeige/Bearbeitung von Tickets: neuer Tab mit anpassbaren Namen. Wird dieser Tab ausgewählt, werden die Sucherergebnisse von Bookstack (wieder die Kategorie ggf. übergeordnete Kategorien) angezeigt.</de>
       </long>
    </description>
-   <homepage>https://github.com/invisiblemarcel</homepage>
+   <homepage>https://github.com/invisiblemarcel/glpiwithbookstack</homepage>
    <download>https://github.com/invisiblemarcel/glpiwithbookstack/releases</download>
    <issues>https://github.com/invisiblemarcel/glpiwithbookstack/issues</issues>
    <readme>https://github.com/invisiblemarcel/glpiwithbookstack/blob/master/README.md</readme>
@@ -27,11 +27,9 @@
    <versions>
       <!-- Add as many version tag you want -->
       <version>
-         <num>0.1.0</num>
+         <num>1.1.0</num>
          <!-- Add as many compatibility tag you want -->
-         <compatibility>9.4</compatibility>
-         <compatibility>9.3</compatibility>
-         <compatibility>9.2</compatibility>
+         <compatibility>10.14</compatibility>
       </version>
    </versions>
    <langs>
@@ -39,19 +37,24 @@
       <lang>en_GB</lang>
       <lang>de_DE</lang>
    </langs>
-   <license>GPL V3+</license>
-   <!--tags>
+   <license>MIT</license>
+   <tags>
       <en>
-         <tag>One tag</tag>
-         <tag>Another tag</tag>
+         <tag>knowledge base</tag>
+         <tag>Bookstack</tag>
+         <tag>FAQ</tag>
       </en>
-      <fr>
-         <tag>Un tag</tag>
-         <tag>Un autre tag</tag>
-      </fr>
-   </tags-->
-   <!--screenshots>
-      <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot.png</screenshot>
-      <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot2.png</screenshot>
-   </screenshots-->
+      <de>
+         <tag>Wissensdatenbank</tag>
+         <tag>Bookstack</tag>
+         <tag>FAQ</tag>
+      </de>
+   </tags>
+   <screenshots>
+      <screenshot>https://raw.githubusercontent.com/invisiblemarcel/glpiwithbookstack/main/screenshots/03_new_ticket.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/invisiblemarcel/glpiwithbookstack/main/screenshots/04_display_ticket.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/invisiblemarcel/glpiwithbookstack/main/screenshots/05_display_ticket_bookstack.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/invisiblemarcel/glpiwithbookstack/main/screenshots/01_open_settings.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/invisiblemarcel/glpiwithbookstack/main/screenshots/02_settings.png</screenshot>
+   </screenshots>
 </root>

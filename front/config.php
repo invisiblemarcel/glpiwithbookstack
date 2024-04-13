@@ -83,6 +83,12 @@ echo "<td >" . __('Seach category name only:') . "</td>";
 echo "<td>";
 Dropdown::showYesNo("search_category_name_only", $my_config['search_category_name_only']);
 echo "</td></tr>";
+// yes or no dropdown for setting search_category_completename_but_only_visible
+echo "<td >" . __('Search category completename but only visible:') . "</td>";
+echo "<td>";
+Dropdown::showYesNo("search_category_completename_but_only_visible", $my_config['search_category_completename_but_only_visible']);
+echo "</td></tr>";
+echo "<tr><td colspan='2'>If 'Seach category name only' is true then this value is disabled.</td></tr>";
 /*
  * Optional: change the display texts for the labels
 */
@@ -107,11 +113,13 @@ echo "<td >" . __('Display text search on bookstack:') . "</td>";
 echo "<td>";
 echo "<input size='32' name='display_text_search_on_bookstack' value='".($my_config['display_text_search_on_bookstack'])."' placeholder='Search [search_term] on Bookstack'>";
 echo "</td></tr>";
+echo "<tr><td></td><td>Possible placeholders: [search_term]</td></tr>";
 // text field for display_text_max_results_reached
 echo "<td >" . __('Display text max results reached:') . "</td>";
 echo "<td>";
 echo "<input size='32' name='display_text_max_results_reached' value='".($my_config['display_text_max_results_reached'])."' placeholder='[result_count] of [max_results] results are displayed. Click here to view all: [url]'>";
 echo "</td></tr>";
+echo "<tr><td></td><td>Possible placeholders: [result_count], [max_results], [url]</td></tr>";
 /*
  * Hidden field for plugin config context
  * Save button
