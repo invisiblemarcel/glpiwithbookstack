@@ -107,4 +107,3 @@ function plugin_myplugin_redefine_menus($menu) {
     }
     return $menu;
 }
-

@@ -121,20 +121,20 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		if ($response['total'] === 0)
 			return true;
 
-		$this->table_with_results['total'] = $response['total'];
-		$this->table_with_results['table'] =  '<table cellpadding="10px">';
-		$this->table_with_results['table'] .= '<tr>';
-		$this->table_with_results['table'] .= '<td style="min-width: 200px;"><h1>'.($my_config['display_text_title']).'</h1></td>';
-		$this->table_with_results['table'] .= '<td><h1>'.($my_config['display_text_content_preview']).'</h1></td>';
-		$this->table_with_results['table'] .= '<td><h1 style="color: blue; text-decoration: underline; text-align: right;">'.$url_display.'</h1></td>';
-		$this->table_with_results['table'] .= '</tr>';
+		$table_with_results['total'] = $response['total'];
+		$table_with_results['table'] =  '<table cellpadding="10px">';
+		$table_with_results['table'] .= '<tr>';
+		$table_with_results['table'] .= '<td style="min-width: 200px;"><h1>'.($my_config['display_text_title']).'</h1></td>';
+		$table_with_results['table'] .= '<td><h1>'.($my_config['display_text_content_preview']).'</h1></td>';
+		$table_with_results['table'] .= '<td><h1 style="color: blue; text-decoration: underline; text-align: right;">'.$url_display.'</h1></td>';
+		$table_with_results['table'] .= '</tr>';
 		// counter for counting the results
 		$counter = 0;
 		foreach($response['data'] as $book) {
-			$this->table_with_results['table'] .= '<tr style="border-top: 1px solid black;">';
-			$this->table_with_results['table'] .= '<td><b><a target="_blanc" href="'.$bookstack_url.'/link/'.($book['id']).'">'.($book['name']).'</a></b></td>';
-			$this->table_with_results['table'] .= '<td colspan="2">'.($book['preview_html']['content']).'</td>';
-			$this->table_with_results['table'] .= '</tr>';
+			$table_with_results['table'] .= '<tr style="border-top: 1px solid black;">';
+			$table_with_results['table'] .= '<td><b><a target="_blanc" href="'.$bookstack_url.'/link/'.($book['id']).'">'.($book['name']).'</a></b></td>';
+			$table_with_results['table'] .= '<td colspan="2">'.($book['preview_html']['content']).'</td>';
+			$table_with_results['table'] .= '</tr>';
 			$counter++;
 		}
 		// if not all results are displayed then show how many displayed and how many missing
@@ -143,10 +143,10 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 			$display_max_results_text = str_replace('[result_count]', $counter, $my_config['display_text_max_results_reached']);
 			$display_max_results_text = str_replace('[max_results]', $response['total'], $display_max_results_text);
 			$display_max_results_text = str_replace('[url]', '<b>'.$url_display.'</b>', $display_max_results_text);
-			$this->table_with_results['table'] .= '<tr style="border-top: 1px solid black;"><td colspan="3">'.$display_max_results_text.'</td></tr>';
+			$table_with_results['table'] .= '<tr style="border-top: 1px solid black;"><td colspan="3">'.$display_max_results_text.'</td></tr>';
 		}
-		$this->table_with_results['table'] .= '</table>';
-		return $this->table_with_results;
+		$table_with_results['table'] .= '</table>';
+		return $table_with_results;
 	}
     /**
      * This function is called from GLPI to render the form when the user click
@@ -170,6 +170,7 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 	static public function postTicketForm($params) {
 		$item = $params['item'];
 		$options = $params['options'];
+
 		// Check if option-id is not set and categoy is set, that means new ticket and category selected
 		if (!isset($options['id']) && $item instanceof Ticket && $options['itilcategories_id'] !== 0)
 		{

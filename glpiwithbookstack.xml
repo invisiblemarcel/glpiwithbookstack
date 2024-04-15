@@ -27,10 +27,10 @@
    <versions>
       <!-- Add as many version tag you want -->
       <version>
-         <num>1.2.0</num>
+         <num>1.2.1</num>
          <!-- Add as many compatibility tag you want -->
          <compatibility>10.14</compatibility>
-         <download_url>https://github.com/invisiblemarcel/glpiwithbookstack/releases/download/v1.2.0/glpiwithbookstack.zip</download_url>
+         <download_url>https://github.com/invisiblemarcel/glpiwithbookstack/releases/download/v1.2.1/glpiwithbookstack.zip</download_url>
       </version>
    </versions>
    <langs>
