@@ -3,7 +3,7 @@
    <key>glpiwithbookstack</key>
    <!-- stable, beta, development, alpha, ... -->
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/glpiwithbookstack/master/bookstack_logo.png</logo>
+   <logo>https://raw.githubusercontent.com/invisiblemarcel/glpiwithbookstack/main/bookstack_logo.png</logo>
    <description>
       <short>
          <!-- Add as many lang tag you want -->
@@ -30,6 +30,7 @@
          <num>1.2.0</num>
          <!-- Add as many compatibility tag you want -->
          <compatibility>10.14</compatibility>
+         <download_url>https://github.com/invisiblemarcel/glpiwithbookstack/releases/download/v1.2.0/glpiwithbookstack.zip</download_url>
       </version>
    </versions>
    <langs>
