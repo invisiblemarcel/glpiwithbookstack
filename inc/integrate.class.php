@@ -40,7 +40,11 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		 * if setting search_category_name_only is false then use the whole path like category > subcategory > subsubcategory
 		*/
 		$search = '';
-		if ($my_config['search_category_name_only'])
+		/*if (true)
+		{
+
+		}
+		else */if ($my_config['search_category_name_only'])
 		{
 			$result = $DB->request('SELECT name FROM glpi_itilcategories WHERE id = '.$categoryid);
 			// only 1 should be returned so just get the current (and only) row
@@ -58,7 +62,17 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 			$result = $DB->request($query);
 			// only 1 should be returned so just get the current (and only) row
 			$row = $result->current();
-			$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['part_name'])));
+			// if the result string is empty return 0 as total and empty table
+			if($row['part_name'] == '')
+			{
+				$table_with_results['total'] = 0;
+				$table_with_results['table'] =  '';
+				return $table_with_results;
+			}
+			else
+			{
+				$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['part_name'])));
+			}
 		}
 		else
 		{
@@ -103,6 +117,8 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		curl_setopt($ch, CURLOPT_HTTPGET, true);
 		// set timeout for curl to prevent long time loading if Bookstack instance is not reachable
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $my_config['curl_timeout']);
+		// load the option curl_ssl_verifypeer from config so the user can disable the check
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $my_config['curl_ssl_verifypeer']);
 		// do not print the return
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.($bookstack_token[0]).':'.($bookstack_token[1])]);
@@ -171,8 +187,17 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		$item = $params['item'];
 		$options = $params['options'];
 
+		// Check if option-id is not set that means new ticket and check if search for title is activated
+		if (!isset($options['id']) && $item instanceof Ticket && true) // && $options['itilcategories_id'] !== 0
+		{
+			// call function for search result and display
+			$config = new self();
+			$table_with_results = $config->getBookstackSearchResults($options['itilcategories_id']);
+			echo $table_with_results['table'];
+			return true;
+		}
 		// Check if option-id is not set and categoy is set, that means new ticket and category selected
-		if (!isset($options['id']) && $item instanceof Ticket && $options['itilcategories_id'] !== 0)
+		else if (!isset($options['id']) && $item instanceof Ticket && $options['itilcategories_id'] !== 0)
 		{
 			// call function for search result and display
 			$config = new self();

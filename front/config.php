@@ -62,6 +62,7 @@ echo "<tr><th colspan='2'>" . __('GLPI with Bookstack plugin setup') . "</th></t
 echo "<td >" . __('Bookstack URL:') . "</td>";
 echo "<td>";
 echo "<input size='32' name='bookstack_url' placeholder='https://example.com' value='".($my_config['bookstack_url'])."'>";
+echo "<tr><td colspan='2'>Just the base URL (the /api will be added in code) without a slash (/) at the end, ex: https://my-bookstack.my-domain.com</td></tr>";
 echo "</td></tr>";
 // text field for bookstack_token_id
 echo "<td >" . __('Bookstack token id:') . "</td>";
@@ -103,6 +104,11 @@ echo "<tr><td colspan='2'>If 'Seach category name only' is true then this value 
 echo "<td >" . __('Curl timeout (in seconds):') . "</td>";
 echo "<td>";
 echo "<input size='2' name='curl_timeout' value='".($my_config['curl_timeout'])."'>";
+echo "</td></tr>";
+// yes or no dropdown for curl_ssl_verifypeer
+echo "<td >" . __('Curl SSL verify:') . "</td>";
+echo "<td>";
+Dropdown::showYesNo("curl_ssl_verifypeer", $my_config['curl_ssl_verifypeer']);
 echo "</td></tr>";
 /*
  * Optional: change the display texts for the labels
