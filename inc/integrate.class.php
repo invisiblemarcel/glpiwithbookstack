@@ -125,11 +125,18 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		$response_json = curl_exec($ch);
 		curl_close($ch);
 		// check if curl failed then return and do not return the data table
-		if ($response_json === false)
+		if (!isset($response_json) || $response_json === false)
 		{
-			return true;
+			$table_with_results['table'] = "<hr><h1 style='color:red;'>BookStack Error: Please contact your administrator.</h1><hr>";
+			return $table_with_results;
 		}
 		$response=json_decode($response_json, true);
+		// check if curl return an error
+		if (isset($response["error"]))
+		{
+			$table_with_results['table'] = "<hr><h1 style='color:red;'>BookStack Error: ".$response["error"]["message"]."</h1><hr>";
+			return $table_with_results;
+		}
 		/*
 		 * Display the Bookstack search results in a table
 		 * first check if there are results, if not return and do not return the data table
