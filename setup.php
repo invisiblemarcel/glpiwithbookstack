@@ -34,7 +34,7 @@ use Glpi\Plugin\Hooks;
 use GlpiPlugin\Glpiwithbookstack\TicketForm;
 use GlpiPlugin\Glpiwithbookstack\TicketIntegration;
 
-define('PLUGIN_GLPIWITHBOOKSTACK_VERSION', '1.3.0');
+define('PLUGIN_GLPIWITHBOOKSTACK_VERSION', '1.3.1');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_GLPIWITHBOOKSTACK_MIN_GLPI_VERSION", "10.0.0");
