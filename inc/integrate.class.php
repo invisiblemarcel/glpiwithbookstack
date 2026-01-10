@@ -46,24 +46,36 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 		}
 		else */if ($my_config['search_category_name_only'])
 		{
-			$result = $DB->request('SELECT name FROM glpi_itilcategories WHERE id = '.$categoryid);
+			$result = $DB->request(['SELECT' => 'name', 'FROM' => 'glpi_itilcategories', 'WHERE' => ['id' => $categoryid]]);
 			// only 1 should be returned so just get the current (and only) row
 			$row = $result->current();
 			$search = str_replace(' ', '+', $row['name']);
 		}
 		else if ($my_config['search_category_completename_but_only_visible'])
 		{
-			$query = 'WITH RECURSIVE getParent AS (';
-			$query .= ' SELECT 1 AS row_num, id AS child_id, name AS child_name, itilcategories_id AS child_itilcategories_id, is_helpdeskvisible as child_is_helpdeskvisible FROM glpi_itilcategories WHERE id = ';
-			$query .= $categoryid;
-			$query .= ' UNION ALL';
-			$query .= ' SELECT row_num+1, id, name, itilcategories_id, is_helpdeskvisible FROM getParent, glpi_itilcategories WHERE id = child_itilcategories_id AND child_itilcategories_id <> 0)';
-			$query .= ' SELECT GROUP_CONCAT(child_name ORDER BY row_num DESC SEPARATOR \'+\') AS part_name FROM getParent WHERE child_is_helpdeskvisible = 1;';
-			$result = $DB->request($query);
-			// only 1 should be returned so just get the current (and only) row
-			$row = $result->current();
+			/*
+			 * Get selected category and all parents while parent not 0
+			*/
+			$search_string = '';
+			for($categoryid_current = $categoryid; $categoryid_current != 0;){
+				$result = $DB->request([
+					'SELECT' => [
+						'id AS child_id', 'name AS child_name', 'itilcategories_id AS child_itilcategories_id', 'is_helpdeskvisible as child_is_helpdeskvisible'
+					]
+					,'FROM' => 'glpi_itilcategories'
+					,'WHERE' => ['id' => $categoryid_current]
+				]);
+				$row = $result->current();
+				// Only add categories that are visible
+				if($row['child_is_helpdeskvisible'] == 1){
+					if($search_string != '') $search_string = $search_string.'+';
+					$search_string = $search_string.$row['child_name'];
+				}
+				$categoryid_current = $row['child_itilcategories_id'];
+			}
+
 			// if the result string is empty return 0 as total and empty table
-			if($row['part_name'] == '')
+			if($search_string == '')
 			{
 				$table_with_results['total'] = 0;
 				$table_with_results['table'] =  '';
@@ -71,12 +83,12 @@ class PluginGlpiwithbookstackIntegrate extends CommonGLPI
 			}
 			else
 			{
-				$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['part_name'])));
+				$search = str_replace(' ', '+', ($search_string));
 			}
 		}
 		else
 		{
-			$result = $DB->request('SELECT completename FROM glpi_itilcategories WHERE id = '.$categoryid);
+			$result = $DB->request(['SELECT' => 'completename', 'FROM' => 'glpi_itilcategories', 'WHERE' => ['id' => $categoryid]]);
 			// only 1 should be returned so just get the current (and only) row
 			$row = $result->current();
 			$search = str_replace(' ', '+', str_replace(' > ', ' ', ($row['completename'])));

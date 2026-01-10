@@ -1,5 +1,5 @@
 <?php
-
+if (!defined('GLPI_ROOT')) { define('GLPI_ROOT', realpath(__DIR__ . '/../..')); }
 /**
  * -------------------------------------------------------------------------
  * Example plugin for GLPI
@@ -39,7 +39,7 @@ use Config as GlpiConfig;
 //header("Location:../../central.php");
 
 // Entry menu case
-include ("../../../inc/includes.php");
+include (__DIR__ . "/../../../../www/glpi/inc/includes.php");
 
 Session::checkRight("config", UPDATE);
 
